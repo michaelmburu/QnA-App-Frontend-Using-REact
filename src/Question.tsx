@@ -1,10 +1,10 @@
 /** @jsxRuntime classic */
 /** @jsx jsx */
-
 import { FC } from "react";
 import {css, jsx} from '@emotion/react';
 import {QuestionData} from './QuestionsData';
 import {gray2, gray3} from './Styles';
+import {Link} from 'react-router-dom';
 
 interface Props {
     data: QuestionData;
@@ -21,7 +21,15 @@ export const Question: FC<Props> = ({ data, showContent }) => (
                     padding: 10px 0px;
                     font-size: 19px;
                 `}>
+                    <Link 
+                        css={css`
+                            text-decoration:none;
+                            color: ${gray2}
+                        `}
+                        to={`questions/${data.questionId}`}
+                    >
                     {data.title}
+                    </Link>
             </div>
             {showContent && (
             <div

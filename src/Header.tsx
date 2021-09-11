@@ -2,10 +2,11 @@
 /** @jsx jsx */
 import { UserIcon } from './Icons';
 import {jsx, css} from '@emotion/react';
+import { Link } from 'react-router-dom';
 import { fontSize, fontFamily, gray1, gray2, gray5 } from './Styles';
 import { ChangeEvent } from 'react';
 export const Header = () =>  { 
-  
+
   const handleSearchInputChange = (e: ChangeEvent<HTMLInputElement>) =>
   {
     console.log(e.currentTarget.value);    
@@ -28,14 +29,15 @@ export const Header = () =>  {
       `
       }
   >   
-    <a href="./"
+    <Link
+      to="/"
       css={css`
         font-size: 24px;
         font-weight: bold;
         color: ${gray1};
         text-decoration: none;
       `}
-    >Q & A</a>    
+    >Q & A</Link>    
     <input type="text" 
     placeholder="Search..."
     onChange={handleSearchInputChange}
@@ -55,7 +57,8 @@ export const Header = () =>  {
         }
       `}
     />
-    <a href="./signin"
+    <Link
+      to="/signin"
       css={css`
         font-family: ${fontFamily};
         font-size: ${fontSize};
@@ -72,6 +75,6 @@ export const Header = () =>  {
           outline-color: ${gray5}
         }
       `}
-    ><UserIcon/><span>Sign In</span></a>
+    ><UserIcon/><span>Sign In</span></Link>
   </div>
 )};

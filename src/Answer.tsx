@@ -1,0 +1,36 @@
+/** @jsxRuntime classic */
+/** @jsx jsx */
+import { FC } from "react";
+import {css, jsx} from '@emotion/react';
+import { AnswerData } from "./AnswerData";
+import { gray3 } from "./Styles";
+
+interface Props{
+    data: AnswerData;
+}
+
+export const Answer: FC<Props> = ({ data }) => (
+    <div
+        css={css`
+            padding:10px 0px;
+        `}
+    >
+        <div
+            css={css`
+                padding: 10px 0px;
+                font-size: 13px;
+            `}
+        >
+            {data.content}
+        </div>
+        <div
+            css={css`
+                font-size: 12px;
+                font-style:italic;
+                color: ${gray3}
+            `}
+        >
+            {`Answered by ${data.userName} on ${data.created.toLocaleDateString()} ${data.created.toLocaleTimeString()}`}
+        </div>
+    </div>
+)

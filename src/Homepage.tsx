@@ -1,13 +1,14 @@
 /** @jsxRuntime classic */
 /** @jsx jsx */
+import { RouteComponentProps } from 'react-router-dom';
 import {css, jsx} from '@emotion/react';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, FC } from 'react';
 import { getUnansweredQuestions, QuestionData } from './QuestionsData';
 import { PrimaryButton } from './Styles';
 import {QuestionList} from './QuestionList';
 import {PageTitle} from './PageTitle';
 import {Page} from './Page';
-export const HomePage = () => { 
+export const HomePage:FC<RouteComponentProps> = ({history}) => { 
 
     const [questions, setQuestions] = useState<QuestionData[] | null>(null);
     const [questionsLoading, setQuestionsLoading] = useState(true);
@@ -22,7 +23,7 @@ export const HomePage = () => {
     });
 
     const handleAskQuestionClick = () => {
-        console.log("TODO: Move the ask page")
+        history.push('/ask');
     }
 
     return(
