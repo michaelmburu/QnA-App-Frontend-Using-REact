@@ -4,9 +4,11 @@ import React from "react";
 import { css, jsx } from "@emotion/react";
 import { gray3, gray6 } from "./Styles";
 import { Page } from "./Page";
+import { Form, required, minLength, Values } from './Form';
+import { Field } from "./Field";
 import { FC, useState, Fragment, useEffect } from "react";
 import { RouteComponentProps } from "react-router-dom";
-import {QuestionData, getQuestion} from './QuestionsData';
+import {QuestionData, getQuestion, postAnswer} from './QuestionsData';
 import {AnswerList} from './AnswerList';
 interface RouteParams{
     questionId: string
@@ -28,9 +30,20 @@ export const QuestionPage: FC<RouteComponentProps<RouteParams>> = ({
             doGetQuestion(questionId);
         }
     }, [match.params.questionId]
-    
-    )
-    return <Page>
+);
+
+const handleSubmit = async (values: Values) => {
+    const result = await postAnswer({
+        questionId: question!.questionId,
+        content: values.content,
+        userName: "Fred",
+        created: new Date()
+    });
+
+        return{success: result ? true : false};
+}
+   return(
+        <Page>
         Question Page {match.params.questionId}
         
         <div
@@ -71,8 +84,27 @@ export const QuestionPage: FC<RouteComponentProps<RouteParams>> = ({
                         {`Asked by ${question.userName} on ${question.created.toLocaleDateString()} ${question.created.toLocaleTimeString()}`}
                     </div>
                     <AnswerList data={question.answers} />
+                    <div css={css`
+                        margin-top: 20px;
+                    `}>
+                    <Form 
+                        submitCaption="Submit Your Answer"
+                        validationRules={{
+                            content: [
+                                { validator: required },
+                                {validator: minLength, arg: 50}
+                            ]
+                        }}
+                        onSubmit={handleSubmit}
+                        failMessage="There was a problem with your answer"
+                        successMessage = "Your answer was successfuly submitted"
+                    >
+                        <Field name="content" label="Your Answer" type="TextArea"/>
+                    </Form>
+                    </div>
                 </Fragment>
             )}
         </div>
         </Page>
+    )
 };

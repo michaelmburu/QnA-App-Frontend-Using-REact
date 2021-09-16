@@ -2,16 +2,27 @@
 /** @jsx jsx */
 import { UserIcon } from './Icons';
 import {jsx, css} from '@emotion/react';
-import { Link } from 'react-router-dom';
+import { Link, RouteComponentProps, withRouter} from 'react-router-dom';
 import { fontSize, fontFamily, gray1, gray2, gray5 } from './Styles';
-import { ChangeEvent } from 'react';
-export const Header = () =>  { 
+import { ChangeEvent, FC, useState, FormEvent } from 'react';
+
+export const Header:FC<RouteComponentProps> = ({history, location}) =>  { 
+
+  const searchParams = new URLSearchParams(location.search);
+  const criteria = searchParams.get('criteria') || '';
+  const [search, setSearch] = useState(criteria);
 
   const handleSearchInputChange = (e: ChangeEvent<HTMLInputElement>) =>
   {
-    console.log(e.currentTarget.value);    
+    setSearch(e.currentTarget.value);
+    console.log(e.currentTarget.value);       
   }
   
+const handleSearchSubmit = (e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    history.push(`/search?criteria=${criteria}`)
+}
+
   return(
   <div
       css={css`
@@ -37,9 +48,13 @@ export const Header = () =>  {
         color: ${gray1};
         text-decoration: none;
       `}
-    >Q & A</Link>    
+    >Q & A
+    </Link> 
+
+    <form onSubmit={handleSearchSubmit}>   
     <input type="text" 
     placeholder="Search..."
+    value= {search}
     onChange={handleSearchInputChange}
       css={css`
         box-sizing: border-box;
@@ -57,6 +72,7 @@ export const Header = () =>  {
         }
       `}
     />
+    </form>
     <Link
       to="/signin"
       css={css`
@@ -78,3 +94,5 @@ export const Header = () =>  {
     ><UserIcon/><span>Sign In</span></Link>
   </div>
 )};
+
+export const HeaderWithRouter = withRouter(Header)

@@ -6,7 +6,7 @@ import {jsx, css} from '@emotion/react';
 import {fontFamily, fontSize, gray2} from './Styles';
 import {HomePage} from './Homepage';
 import {QuestionPage} from './QuestionPage';
-import {Header} from './Header';
+import {HeaderWithRouter as Header} from './Header';
 import {BrowserRouter, Route, Redirect, Switch} from 'react-router-dom';
 import {SearchPage} from './SearchPage';
 import {SignInPage} from './SignInPage';
@@ -37,7 +37,6 @@ function App() {
               css={css`
                 margin-top: 100px;
                 text-align: center;
-
               `}
             >
             Loading....

@@ -9,6 +9,20 @@ export interface QuestionData{
     answers: AnswerData[];
 }
 
+export interface PostQuestionData{
+    title: string;
+    content: string;
+    userName: string;
+    created: Date;
+}
+
+export interface PostAnswerData{
+    questionId: number;
+    content: string;
+    userName: string;
+    created: Date;
+}
+
 const questions: QuestionData[] = [
     {
     questionId: 1,
@@ -65,3 +79,27 @@ export const searchQuestions = async (
     await wait(500);
     return questions.filter(q => q.title.toLowerCase().indexOf(criteria.toLowerCase()) >= 0 || q.content.toLowerCase().indexOf(criteria.toLowerCase()) >= 0,);
 };
+
+export const postQuestion = async (
+    question: PostQuestionData,
+): Promise<QuestionData | undefined> =>{
+    await wait(500);
+    const questionId = Math.max(...questions.map(q => q.questionId)) + 1;
+    const newQuestion: QuestionData = {
+        ...question, questionId, answers: []
+    };
+    questions.push(newQuestion);
+    return newQuestion;
+}
+
+export const postAnswer = async (
+    answer:PostAnswerData,
+): Promise<AnswerData | undefined> => {
+    await wait(500);
+    const question = questions.filter(q => q.questionId === answer.questionId)[0];
+    const answerInQuestion: AnswerData = {
+        answerId: 99, ...answer
+    };
+    question.answers.push(answerInQuestion)
+    return answerInQuestion;
+}
