@@ -1,5 +1,4 @@
 import { AnswerData } from "./AnswerData";
-
 export interface QuestionData{
     questionId: number;
     title: string;

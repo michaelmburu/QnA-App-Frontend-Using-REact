@@ -8,11 +8,16 @@ import { PrimaryButton } from './Styles';
 import {QuestionList} from './QuestionList';
 import {PageTitle} from './PageTitle';
 import {Page} from './Page';
-export const HomePage:FC<RouteComponentProps> = ({history}) => { 
 
+interface Props extends RouteComponentProps{
+    getUnansweredQuestions: () => Promise<void>;
+    questions: QuestionData[] | null;
+    questionsLoading: boolean;
+}
+
+export const HomePage:FC<Props> = ({history}) => { 
     const [questions, setQuestions] = useState<QuestionData[] | null>(null);
     const [questionsLoading, setQuestionsLoading] = useState(true);
-
     useEffect(() => {
         const doGetUnansweredQuestions = async () => {
             const unAnsweredQuestions  = await getUnansweredQuestions();
@@ -24,7 +29,7 @@ export const HomePage:FC<RouteComponentProps> = ({history}) => {
 
     const handleAskQuestionClick = () => {
         history.push('/ask');
-    }
+    };
 
     return(
         <Page>

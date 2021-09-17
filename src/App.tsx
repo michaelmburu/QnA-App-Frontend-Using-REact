@@ -1,17 +1,24 @@
 
 /** @jsxRuntime classic */
 /** @jsx jsx */
+import { HomePage } from './Homepage';
 import { lazy, Suspense } from 'react';
+import { Provider } from 'react-redux';
+import {configureStore} from './Store';
 import {jsx, css} from '@emotion/react';
 import {fontFamily, fontSize, gray2} from './Styles';
-import {HomePage} from './Homepage';
 import {QuestionPage} from './QuestionPage';
 import {HeaderWithRouter as Header} from './Header';
 import {BrowserRouter, Route, Redirect, Switch} from 'react-router-dom';
 import {SearchPage} from './SearchPage';
 import {SignInPage} from './SignInPage';
 import {NotFoundPage} from './NotFoundPage';
-const AskPage = lazy(() => import('./AskPage'))
+const AskPage = lazy(() => import('./AskPage'));
+
+
+//Store
+const store = configureStore();
+
 function App() {
 
 
@@ -22,7 +29,8 @@ function App() {
       font-size: ${fontSize};
       color: ${gray2}   
       `}
-    >  
+    >
+  <Provider store={store}>  
   <BrowserRouter>
     <div>
       <Header />
@@ -52,6 +60,7 @@ function App() {
       </Switch>    
     </div>
   </BrowserRouter>
+  </Provider>
     </div>
   );
 }

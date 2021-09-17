@@ -60,12 +60,13 @@ export const FormContext = createContext<FormContextProps>({
 interface Props{
     submitCaption?: string;
     validationRules?: ValidatorProp
-    onSubmit: (values: Values) => Promise<SubmitResult>;
+    onSubmit: (values: Values) => Promise<SubmitResult> | any;
+    submitResult?: SubmitResult
     successMessage?: string;
     failMessage?: string
 }
 
-export const Form: FC<Props> = ({submitCaption, children, validationRules, onSubmit, successMessage = "Message", failMessage = "Something went wrong"}) => {
+export const Form: FC<Props> = ({submitCaption, children, validationRules, onSubmit, submitResult, successMessage = "Message", failMessage = "Something went wrong"}) => {
 
 const [values, setValues] = useState<Values>({});
 const [errors, setErrors] = useState<Errors>({});
@@ -109,9 +110,16 @@ const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
         setSubmitError(false);
         // TODO - call the consumer submit function
         const result = await onSubmit(values);
+
+        //The result may be passed through as a prop
+        if(result === undefined)
+        {
+            return;
+        }
         // TODO - set any errors in state
         setErrors(result.errors || {})
         setSubmitError(false);
+        setSubmitting(false);
         setSubmitted(true);
         // TODO - set state to indicate submission has finished
     }
@@ -133,6 +141,12 @@ const validateForm = () => {
         setErrors(newErrors);
         return!haveError;
 }
+
+const disabled = submitResult ? submitResult.success : submitting || (submitted && !submitError);
+
+const showError = submitResult ? !submitResult.success : submitted && submitError;
+
+const showSuccess = submitResult ? submitResult.success : submitted && !submitError;
 return (
     <FormContext.Provider
     value ={{values, setValue: (fieldName: string, value: any) => {
@@ -148,7 +162,7 @@ return (
     >
     <form noValidate={true} onSubmit={handleSubmit}>
         <fieldset
-            disabled={submitting || (submitted && !submitError)}
+            disabled={disabled}
             css={css`
                 margin: 10px auto 0 auto;
                 padding: 30px;
@@ -171,16 +185,8 @@ return (
             {submitCaption}
         </PrimaryButton>
         </div>
-        {submitted && submitError && (
-            <p css={css`color: red`}>
-            {failMessage}
-            </p>
-        )}
-            {submitted && !submitError && (
-                <p css={css`color: green`}>
-                {successMessage}
-                </p>
-            )}
+        {showError &&<p css={css`color: red`}>{failMessage}</p>}
+        {showSuccess &&  <p css={css`color: green`}>{successMessage}</p>}
         </fieldset>
     </form>
     </FormContext.Provider>
